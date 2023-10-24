@@ -132,7 +132,59 @@ const scrollUp = () => {
 window.addEventListener("scroll", scrollUp);
 
 /*=============== SCROLL SECTIONS ACTIVE LINK ===============*/
+const sections = document.querySelectorAll("section[id]");
+
+const scrollActive = () => {
+  const scrollDown = window.scrollY;
+
+  sections.forEach((current) => {
+    const sectionHeight = current.offsetHeight,
+      sectionTop = current.offsetTop - 58,
+      sectionId = current.getAttribute("id"),
+      sectionClass = document.querySelector(`.nav__menu a[href*=${sectionId}]`);
+
+    if (scrollDown > sectionTop && scrollDown <= sectionTop + sectionHeight) {
+      sectionClass.classList.add("active-link");
+    } else {
+      sectionClass.classList.remove("active-link");
+    }
+  });
+};
+window.addEventListener("scroll", scrollActive);
 
 /*=============== DARK LIGHT THEME ===============*/
+const themeButton = document.getElementById("theme-button"),
+  darkTheme = "dark-theme",
+  iconTheme = "ri-sun-line";
 
+// Previously selected topic (if user selected)
+const selectedTheme = localStorage.getItem("selected-theme"),
+  selectedIcon = localStorage.getItem("selected-icon");
+
+// We obtain the current theme that the interface has by validating the dark theme class
+const getCurrentTheme = () =>
+    document.body.classList.contains(darkTheme) ? "dark" : "light",
+  getCurrentIcon = () =>
+    themeButton.classList.contains(iconTheme) ? "rl-moon-line" : "rl-sun-line";
+
+// We validate if the user previously chose a topic
+if (selectedTheme) {
+  // If the validation is fulfilled, we ask what the issue was to know if we activated or deactivated
+  document.body.classList[selectedTheme === "dark" ? "add" : "remove"](
+    darkTheme
+  );
+  themeButton.classList[selectedIcon === "rl-moon-line" ? "add" : "remove"](
+    iconTheme
+  );
+}
+
+// Activate / deactivate the theme with button
+themeButton.addEventListener("click", () => {
+  // Add or remove the dark / icon theme
+  document.body.classList.toggle(darkTheme);
+  themeButton.classList.toggle(iconTheme);
+  // We save the theme and the current icon that user chose
+  localStorage.setItem("selected-theme", getCurrentTheme());
+  localStorage.setItem("selected-icon", getCurrentIcon());
+});
 /*=============== SCROLL REVEAL ANIMATION ===============*/
